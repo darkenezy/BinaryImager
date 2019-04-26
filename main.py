@@ -1,31 +1,79 @@
+"""
+Main module with function for creating B/W verison of image with usage of
+dithering.
+"""
+
+import json
+
 from PIL import Image
 
-with open("config.cfg") as fp:
-    name, low, high = fp.read().split()
-    
-image = Image.open(name)
 
-h = image.height
-w = image.width
+def create_bw_image(image, white_thresholds, black_thresholds):
+    """
+    Create copy of the image with only black and white colors. Every pixel
+    with average color brightness lower than `white_thresholds` will turn
+    white, while every pixel with average color brightness higher than
+    `black_thresholds` will tunr black. Other pixels will decide color
+    depending on their position.
 
-low = int(low)
-high = int(high)
+    :param image: image to create copy of
+    :param white_thresholds: threshold for turning white
+    :param black_thresholds: threshold for turning black
 
-px = image.load()
-for i in range(w):
-    for j in range(h):
-        val = sum(px[i, j])/3
-        if val < low:
-            px[i, j] = (0, 0, 0)
-        elif val > high:
-            px[i, j] = (255, 255, 255)
-        else:
-            if (i+j)%2:
-                px[i, j] = (0, 0, 0)
+    :returns: resulting image
+    """
+
+    bw_image = image.copy()
+
+    pixels = bw_image.load()
+
+    for i in range(bw_image.width):
+        for j in range(bw_image.height):
+            val = sum(pixels[i, j]) / 3
+
+            if val < black_thresholds:
+                pixels[i, j] = (0, 0, 0)
+
+            elif val > white_thresholds:
+                pixels[i, j] = (255, 255, 255)
+
             else:
-                px[i, j] = (255, 255, 255)
-                
+                if (i+j)%2:
+                    pixels[i, j] = (0, 0, 0)
+                else:
+                    pixels[i, j] = (255, 255, 255)
 
-image = image.resize((w//5, h//5))
-image = image.resize((w, h), Image.NEAREST)
-image.save("out.jpg")
+    orig_width = bw_image.width
+    orig_height = bw_image.height
+
+    bw_image = bw_image.resize((bw_image.width // 5, bw_image.height // 5))
+    bw_image = bw_image.resize((orig_width, orig_height), Image.NEAREST)
+
+    return bw_image
+
+
+def create_image_from_config(config):
+    """
+    Create copy of the image with only black and white colors using
+    passed configuration object and save it to specified file.
+    For details about creation see :func:`.create_bw_image`.
+
+    :param config: configuration object
+    """
+
+    image = Image.open(config["filename"])
+
+    bw_image = create_bw_image(
+        image,
+        white_thresholds=config["thresholds"]["white"],
+        black_thresholds=config["thresholds"]["black"],
+    )
+
+    bw_image.save(config["output_filename"])
+
+
+if __name__ == "__main__":
+    with open("config.json") as fp:
+        CONFIG = json.load(fp)
+
+    create_image_from_config(CONFIG)
