@@ -46,8 +46,6 @@ def create_bw_image(image, white_thresholds, black_thresholds):
     orig_width = bw_image.width
     orig_height = bw_image.height
 
-    print(bw_image)
-
     bw_image = bw_image.resize((bw_image.width // 5, bw_image.height // 5))
     bw_image = bw_image.resize((orig_width, orig_height), Image.NEAREST)
 
