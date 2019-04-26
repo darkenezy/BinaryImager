@@ -1,20 +1,38 @@
 # BinaryImager
-Creates B/W pixel image from your picture
 
-## Requirements
-* python 3.6+
-* pillow
-`pip install pillow`
+Creates B/W pixel image from your picture with dithering.
+
+## Installation
+
+- Install `python` version 3.6 or newer.
+- Install requirements from `requirements.txt` -> `pip install-r requirements.txt`
 
 ## Usage
-### Config it
-Configuring file `config.cfg` contains single string formatted like:
-`<filename> <black border> <white border>  `
 
-#### Examples:
-* `filename` test.jpg
-* `black border` - integer, 0 - 128, default 85
-* `white border` - integer, 128 - 255, default 170
+### Configuration
 
-### Run the service
-`python3 main.py`
+Set your settings in file `config.json`. Configuration file structure:
+
+```json
+{
+  "filename": "example.png",
+  "output_filename": "example.out.png",
+  "thresholds": {
+    "white": 170,
+    "black": 85
+  }
+}
+
+```
+
+Place your target file's name in place of `"example.png"`, threshold values
+for white and black in corresponding fields inside of `"thresholds"` key.
+
+Recommended values:
+
+- `"thresholds"."white"` -> 85
+- `"thresholds"."black"` -> 170
+
+### Run
+
+Run script from terminal with `python main.py`.

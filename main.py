@@ -1,15 +1,17 @@
+import json
+
 from PIL import Image
 
-with open("config.cfg") as fp:
-    name, low, high = fp.read().split()
-    
-image = Image.open(name)
+with open("config.json") as fp:
+    config = json.load(fp)
+
+image = Image.open(config["filename"])
 
 h = image.height
 w = image.width
 
-low = int(low)
-high = int(high)
+low = config["thresholds"]["black"]
+high = config["thresholds"]["white"]
 
 px = image.load()
 for i in range(w):
@@ -24,8 +26,8 @@ for i in range(w):
                 px[i, j] = (0, 0, 0)
             else:
                 px[i, j] = (255, 255, 255)
-                
+
 
 image = image.resize((w//5, h//5))
 image = image.resize((w, h), Image.NEAREST)
-image.save("out.jpg")
+image.save(config["output_filename"])
