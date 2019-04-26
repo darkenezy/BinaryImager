@@ -17,8 +17,8 @@ def create_bw_image(image, white_thresholds, black_thresholds):
     depending on their position.
 
     :param image: image to create copy of
-    :param white_thresholds: threshold for turning white
-    :param black_thresholds: threshold for turning black
+    :param white_thresholds: threshold for turning white (0-255)
+    :param black_thresholds: threshold for turning black (0-255)
 
     :returns: resulting image
     """
@@ -46,6 +46,8 @@ def create_bw_image(image, white_thresholds, black_thresholds):
     orig_width = bw_image.width
     orig_height = bw_image.height
 
+    print(bw_image)
+
     bw_image = bw_image.resize((bw_image.width // 5, bw_image.height // 5))
     bw_image = bw_image.resize((orig_width, orig_height), Image.NEAREST)
 
@@ -72,7 +74,7 @@ def create_image_from_config(config):
     bw_image.save(config["output_filename"])
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     with open("config.json") as fp:
         CONFIG = json.load(fp)
 
