@@ -1,4 +1,5 @@
 # BinaryImager
+[![Build Status](https://travis-ci.org/darkenezy/BinaryImager.svg?branch=master)](https://travis-ci.org/darkenezy/BinaryImager)
 
 Creates B/W pixel image from your picture with dithering.
 
