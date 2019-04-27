@@ -1,0 +1,17 @@
+dist: xenial
+language: python
+python:
+  - "3.6"
+  - "3.7"
+  - "3.7-dev"
+  - "3.8-dev"
+install:
+  - python -m pip install -r requirements.txt
+  - python -m pip install -r requirements-dev.txt
+script:
+  - PYTHONPATH=$PWD pytest
+  - ./utils/run_coverage.py
+  - ./utils/run_pylint.py
+branches:
+  only:
+  - master
